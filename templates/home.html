@@ -1,0 +1,8 @@
+{% extends "layout.html" %}
+{% block body %}
+    <div class="ui-grid-d ui-responsive">
+        {% for app in apps %}
+            <div class="ui-block-{{ loop.cycle('a', 'b', 'c', 'd', 'e') }}"><a href="{{ app.url }}" target="content" class="ui-shadow ui-btn ui-corner-all {{ app.css_class }}">{{ app.name }}</a></div>
+        {% endfor %}
+    </div>
+{% endblock %}
