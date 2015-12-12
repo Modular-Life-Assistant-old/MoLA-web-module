@@ -25,6 +25,7 @@ class Module(NotificationModule):
             'host' : '0.0.0.0',
             'debug': False,
         })
+        config['threaded'] = True  # for multiple pages simultaneously
         self.flask.run(**config)
 
     def send(self, msg, image=None, sound=None):
