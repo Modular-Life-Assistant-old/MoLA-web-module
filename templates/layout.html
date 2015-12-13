@@ -11,9 +11,65 @@
             <div role="main" class="ui-content">
                 {% block body %}{% endblock %}
             </div>
+
+            <div data-role="popup" id="tooltip"><p></p></div>
         </div>
 
         <script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
         <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+        <script>
+            var tooltip_queue = [];
+            var tooltip_timeout = null;
+
+            function add_tooltip(message, category) {
+                tooltip_queue.push({
+                    "message": message,
+                    "category": category
+                });
+
+                show_tooltip();
+            }
+
+            function show_tooltip(close) {
+                if (tooltip_timeout)
+                    return;
+
+                var delay = 2000;
+                if (close) {
+                    $("#tooltip").popup("close");
+                    delay = 200;
+                }
+                else {
+                    var tooltip = tooltip_queue.shift();
+                    if (!tooltip)
+                        return;
+
+                    var options = {
+                        "positionTo": "windows"
+                    };
+
+                    // tooltip["category"] == "message" ? "info" : "error";
+
+                    $("#tooltip p").html(tooltip["message"]);
+                    $("#tooltip").popup("open", options);
+                }
+
+                tooltip_timeout = window.setTimeout(function() {
+                    clearTimeout(tooltip_timeout);
+                    tooltip_timeout = null;
+                    show_tooltip(!close);
+                }, delay);
+            }
+
+            $(function () {
+                {% block javascript %}{% endblock %}
+
+                {% with messages = get_flashed_messages(with_categories=True) %}
+                    {% for category, message in messages %}
+                        add_tooltip("{{ message }}", "{{ category }}");
+                    {% endfor %}
+                {% endwith %}
+            });
+        </script>
     </body>
 </html>

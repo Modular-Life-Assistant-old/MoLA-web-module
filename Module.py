@@ -1,6 +1,5 @@
 from flask import Flask, render_template
 from core import DataFileManager
-
 from helpers.modules.NotificationModule import NotificationModule
 
 
@@ -17,6 +16,7 @@ class Module(NotificationModule):
         })
 
     def init(self):
+        # url mapping
         self.flask.add_url_rule('/', view_func=self._index)
         self.flask.add_url_rule('/home', 'home', view_func=self._home)
 
