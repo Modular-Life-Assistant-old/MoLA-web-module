@@ -1,10 +1,11 @@
 from flask import Flask, render_template
+
 from core import DataFileManager
 from core.settings import SECRET_KEY
-from helpers.modules.NotificationModule import NotificationModule
+from helpers.modules.BaseModule import BaseModule
 
 
-class Module(NotificationModule):
+class Module(BaseModule):
     flask = Flask(__name__)
     app_list = []
 
@@ -31,9 +32,6 @@ class Module(NotificationModule):
         })
         config['threaded'] = True  # for multiple pages simultaneously
         self.flask.run(**config)
-
-    def send(self, msg, image=None, sound=None):
-        pass
 
     def _home(self):
         return render_template('home.html', apps=self.app_list)
