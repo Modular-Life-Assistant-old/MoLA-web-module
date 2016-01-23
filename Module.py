@@ -7,15 +7,18 @@ from helpers.modules.BaseModule import BaseModule
 
 class Module(BaseModule):
     flask = Flask(__name__)
-    app_list = []
+    __app_list = []
 
     def add_blueprint(self, blueprint, icon='', **options):
         self.flask.register_blueprint(blueprint, **options)
-        self.app_list.append({
+        self.__app_list.append({
             'css_class': 'ui-btn-icon-left ui-icon-%s' % icon if icon else '',
             'name': blueprint.name,
             'url': blueprint.url_prefix,
         })
+
+    def get_apps(self):
+        return self.__app_list
 
     def init(self):
         # url mapping
@@ -34,8 +37,8 @@ class Module(BaseModule):
         self.flask.run(**config)
 
     def _home(self):
-        return render_template('home.html', apps=self.app_list)
+        return render_template('home.html', apps=self.get_apps())
 
     def _index(self):
-        return render_template('index.html', apps=self.app_list,
+        return render_template('index.html', apps=self.get_apps(),
                                content_url='/home')
